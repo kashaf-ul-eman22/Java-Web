@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE_PATH = '/home/kashaf/JavaApp'
+        DOCKER_VERSION = '27.3.1'
+        DOCKER_IMAGE = 'JavaWeb:latest'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kashaf-ul-eman22/Java-Web.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
+    }
+     
+    post {
+        success {
+            echo 'Docker image built and pushed successfully!'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+    }
+}
